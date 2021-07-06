@@ -1,0 +1,42 @@
+import time
+import board
+import busio
+import adafruit_ads1x15.ads1115 as ADS
+import RPi.GPIO as GPIO
+from adafruit_ads1x15.analog_in import AnalogIn
+
+ReferenciaAltura = 10.0
+kp = 350.0
+Erroranterior = 0.0
+Error = 0.0 
+Sensor = 0.0
+controlanterior = 0.0
+controlpi = 0.0
+cicloUtil = 0.0
+GPIO.setmode(GPIO.BCM) 
+GPIO.setup(12,GPIO.OUT)
+pwm12=GPIO.PWM(12,490)
+pwm12.start(0)
+i2c = busio.I2C(board.SCL, board.SDA)
+ts = 0.6 
+ads = ADS.ADS1115(i2c)
+chan = AnalogIn(ads, ADS.P0)
+while True:
+    Sensor = round(chan.voltage,3)
+    Error = round ((ReferenciaAltura*0.0482)-Sensor,3)
+    controlpi = round (Error * kp - 119.4 * Erroranterior + controlanterior,3)
+    if (controlpi > 1.0):
+        controlpi = 1.0
+
+    if (cicloUtil < 0.0):
+        cicloUtil = 0.0
+    if (Error < 0.0):
+        Error = 0.0
+    if (controlpi < 0.0):
+        controlpi = 0.0
+    cicloUtil = round (controlpi * 100,3)
+    pwm12.ChangeDutyCycle(cicloUtil)
+    time.sleep (ts)
+    controlanterior = controlpi
+    Erroranterior = Error
+    #print ("sensor v = ",Sensor," Error = ",Error, " ControlPI = ",controlpi, " Ciclo Util = ",cicloUtil)
