@@ -1,0 +1,53 @@
+float ReferenciaAltura = 5; //SetPoint o ReferenciaAltura (altura deseada)
+const int kp = 350;
+float Erroranterior = 0; //Muestra anterior del Error
+float Error = 0; //Muestra Error actual
+float controlanterior = 0; //Muestra anterior del control
+float controlpi = 0; //Muestra actual del control
+float ADCVal = 0;
+float CicloUtil = 0;
+const int Pwm = 10;
+const int ts = 600; //TS es 1/10 del tiempo de estabilizacion de la planta.
+
+
+void setup() {
+  pinMode(Pwm, OUTPUT); //Pin 10 para motobomba
+  Serial.begin(9600);
+}
+
+void loop() {
+  ADCVal = analogRead(A0);
+  float sensor = ADCVal * (5.0 / 1023.0); //Conversion de ADC a voltaje
+  Error = (ReferenciaAltura * 0.048) - sensor; //Calculo del Error
+  controlpi = Error * kp - 119.4 * Erroranterior + controlanterior;
+
+  if (controlpi > 1.0) { //Ciclo util maximo (k) no puede valer mas de 1
+    controlpi = 1.0;
+  }
+
+  if (CicloUtil < 0) {
+    CicloUtil = 0;
+  }
+  if (Error < 0) {
+    Error = 0;
+  }
+  if (controlpi < 0) {
+    controlpi = 0;
+  }
+  CicloUtil = controlpi * 255;
+  analogWrite(Pwm, CicloUtil);
+  delay(ts);//Periodo de muestreo para control (Ts=0.6s)
+  controlanterior = controlpi;
+  Erroranterior = Error;
+  Serial.print("Sensor (v):  ");
+  Serial.print(sensor);
+  Serial.print("      Error ");
+  Serial.print(Error);
+  Serial.print("      ControlP: ");
+  Serial.print(controlpi);
+  Serial.print("      Altura: ");
+  Serial.print(ADCVal / 10);
+  Serial.print(" cm ");
+  Serial.print("      PWM: ");
+  Serial.println(CicloUtil);
+}
