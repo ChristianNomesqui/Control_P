@@ -1,0 +1,20 @@
+import time
+import board
+import busio
+import adafruit_ads1x15.ads1115 as ADS
+import RPi.GPIO as GPIO
+from adafruit_ads1x15.analog_in import AnalogIn
+Sensor = 0.0
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(13,GPIO.OUT)
+pwm13=GPIO.PWM(13,490)
+pwm13.start(0)
+i2c = busio.I2C(board.SCL, board.SDA)
+ads = ADS.ADS1115(i2c)
+chan = AnalogIn(ads, ADS.P0)
+while True:
+   Sensor = round(chan.voltage,3)
+   pwm13.ChangeDutyCycle(100)
+   if (Sensor <=0.006):
+       pwm13.ChangeDutyCycle(0)
+    print ("Sensor (v) = ",Sensor)
