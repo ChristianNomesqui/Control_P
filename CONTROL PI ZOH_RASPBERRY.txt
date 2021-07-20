@@ -39,4 +39,4 @@ while True:
     time.sleep (ts)
     controlanterior = controlpi
     Erroranterior = Error
-    #print ("sensor v = ",Sensor," Error = ",Error, " ControlPI = ",controlpi, " Ciclo Util = ",cicloUtil)
+
