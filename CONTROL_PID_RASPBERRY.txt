@@ -41,4 +41,4 @@ while True:
     Erroranterior_1 = Error;
     Erroranterior_2 = Erroranterior_1;
     controlanterior_2 = controlanterior_1;
-    #print ("sensor v = ",Sensor," Error = ",Error, " ControlPI = ",controlpi, " Ciclo Util = ",cicloUtil)
+
