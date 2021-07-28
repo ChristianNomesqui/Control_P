@@ -5,6 +5,10 @@ import adafruit_ads1x15.ads1115 as ADS
 import RPi.GPIO as GPIO
 from adafruit_ads1x15.analog_in import AnalogIn
 Sensor = 0.0
+GPIO.setmode(GPIO.BCM) 
+GPIO.setup(12,GPIO.OUT)
+pwm12=GPIO.PWM(12,490)
+pwm12.start(0)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(13,GPIO.OUT)
 pwm13=GPIO.PWM(13,490)
@@ -17,4 +21,3 @@ while True:
    pwm13.ChangeDutyCycle(100)
    if (Sensor <=0.006):
        pwm13.ChangeDutyCycle(0)
-    print ("Sensor (v) = ",Sensor)
