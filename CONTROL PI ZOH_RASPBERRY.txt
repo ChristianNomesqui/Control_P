@@ -13,6 +13,10 @@ Sensor = 0.0
 controlanterior = 0.0
 controlpi = 0.0
 cicloUtil = 0.0
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(13,GPIO.OUT)
+pwm13=GPIO.PWM(13,490)
+pwm13.start(0)
 GPIO.setmode(GPIO.BCM) 
 GPIO.setup(12,GPIO.OUT)
 pwm12=GPIO.PWM(12,490)
@@ -39,4 +43,3 @@ while True:
     time.sleep (ts)
     controlanterior = controlpi
     Erroranterior = Error
-
