@@ -11,6 +11,10 @@ Error = 0.0
 Sensor = 0.0
 ControlP = 0.0
 GPIO.setmode(GPIO.BCM)
+GPIO.setup(13,GPIO.OUT)
+pwm13=GPIO.PWM(13,490)
+pwm13.start(0)
+GPIO.setmode(GPIO.BCM)
 GPIO.setup(12,GPIO.OUT)
 pwm12=GPIO.PWM(12,490)
 pwm12.start(0)
